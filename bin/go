@@ -9,6 +9,7 @@ function help {
 	echo "where <command> is one of:";
 	echo "      -h, --help       usage of go";
 	echo "      -v, --version    current version of go";
+	echo "      -p, --path       path to working directory";
 	echo "      -l, --list       list all shell scripts available";
 	echo "";
 	echo "      <script name>    will execute given shell script";
@@ -17,14 +18,21 @@ function help {
 	echo "";
 }
 
+function run_script { 
+	echo "--------------------";
+	
+}
+
 function version {
 	echo "";
 	echo "go@$go_version";
 	echo "";
 }
 
-function run_script { 
-	echo "running";
+function path {
+	echo "";
+	echo "present working directory: `pwd`";
+	echo "";
 }
 
 case "$1" in
@@ -45,6 +53,12 @@ case "$1" in
     ;;
     --version)
 		version;
+    ;;
+    -p)
+		path;
+    ;;
+    --path)
+		path;
     ;;
     *)
     	run_script;
