@@ -1,18 +1,22 @@
 #!/bin/bash
 
 go_version="0.0.1";
+param=$1;
+param_2=$2;
 
 function help {
 	echo "";
 	echo "Usage: go <command>";
 	echo "";
 	echo "where <command> is one of:";
-	echo "      -h, --help       usage of go";
-	echo "      -v, --version    current version of go";
-	echo "      -p, --path       path to working directory";
-	echo "      -l, --list       list all shell scripts available";
+	echo "      -h, --help                  general help/usage of go";
+	echo "      -v, --version               current version of go";
+	echo "      -p, --path                  path to working directory";
+	echo "      -l, --list                  list all shell scripts available";
+	echo "      -c, --copy                  copy script into global space";
 	echo "";
-	echo "      <script name>    will execute given shell script";
+	echo "      <script name>               will execute given shell script";
+	echo "      -f, --force <script name>   will run the script as admin user";
 	echo "";
 	echo "go@$go_version - present working directory: `pwd`";
 	echo "";
@@ -20,7 +24,31 @@ function help {
 
 function run_script { 
 	echo "--------------------";
-	
+	echo "running - $param";
+	echo "--------------------";
+
+	cd ~/github/kublikon/go/shell-scripts/ustyme
+
+	chmod a+rwx $param;
+
+	bash ./$param;
+}
+
+function force_run_script {
+	echo "--------------------";
+	echo "running - sudo $param_2";
+	echo "--------------------";
+
+	cd ~/github/kublikon/go/shell-scripts/ustyme
+
+	if [[ $param_2 ]]
+	then
+		chmod a+rwx $param_2;
+
+		sudo bash ./$param_2;
+	else 
+		help;
+	fi
 }
 
 function version {
@@ -35,7 +63,7 @@ function path {
 	echo "";
 }
 
-case "$1" in
+case "$param" in
 	"")
 		help;
     ;;
@@ -59,6 +87,12 @@ case "$1" in
     ;;
     --path)
 		path;
+    ;;
+    -f)
+		force_run_script;
+    ;;
+    --force)
+		force_run_script;
     ;;
     *)
     	run_script;
