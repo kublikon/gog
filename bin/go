@@ -18,7 +18,7 @@ function help {
 	echo "      <script name>               will execute given shell script";
 	echo "      -f, --force <script name>   will run the script as admin user";
 	echo "";
-	echo "go@$go_version - present working directory: `pwd`";
+	echo "go@$go_version - global working directory: ${BASH_SOURCE[0]}";
 	echo "";
 }
 
@@ -60,7 +60,11 @@ function version {
 function path {
 	echo "";
 	echo "present working directory: `pwd`";
+	echo "global working directory:  ${BASH_SOURCE[0]}";
 	echo "";
+
+
+	echo "${BASH_SOURCE[0]}";
 }
 
 case "$param" in
