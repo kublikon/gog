@@ -23,11 +23,15 @@ function help {
 }
 
 function run_script { 
+	dir="$( dirname "${BASH_SOURCE[0]}" )";
+	scripts_dir=${dir//bin/lib}"/node_modules/go/shell-scripts";
+
+	echo "";
 	echo "--------------------";
 	echo "running - $param";
 	echo "--------------------";
 
-	cd ~/github/kublikon/go/shell-scripts/ustyme
+	cd $scripts_dir
 
 	chmod a+rwx $param;
 
@@ -35,11 +39,15 @@ function run_script {
 }
 
 function force_run_script {
+	dir="$( dirname "${BASH_SOURCE[0]}" )";
+	scripts_dir=${dir//bin/lib}"/node_modules/go/shell-scripts";
+
+	echo "";
 	echo "--------------------";
 	echo "running - sudo $param_2";
 	echo "--------------------";
 
-	cd ~/github/kublikon/go/shell-scripts/ustyme
+	cd $scripts_dir
 
 	if [[ $param_2 ]]
 	then
@@ -51,6 +59,22 @@ function force_run_script {
 	fi
 }
 
+function list_scripts {
+	dir="$( dirname "${BASH_SOURCE[0]}" )";
+	scripts_dir=${dir//bin/lib}"/node_modules/go/shell-scripts";
+
+	echo "";
+	echo $scripts_dir;
+
+	cd $scripts_dir;
+
+	for entry in *
+	do
+	  echo "|-- $entry";
+	done
+
+}
+
 function version {
 	echo "";
 	echo "go@$go_version";
@@ -58,21 +82,25 @@ function version {
 }
 
 function path {
+	dir="$( dirname "${BASH_SOURCE[0]}" )";
+	scripts_dir=${dir//bin/lib}"/node_modules/go/shell-scripts";
+
 	echo "";
 	echo "present working directory: `pwd`";
-	echo "global working directory:  ${BASH_SOURCE[0]}";
+	echo "global working directory:  $( dirname "${BASH_SOURCE[0]}" )";
+	echo "shell scripts directory:   $scripts_dir";
 	echo "";
-
-
-	echo "${BASH_SOURCE[0]}";
 }
 
 case "$param" in
 	"")
 		help;
     ;;
-	ls)
-		echo "list scripts";
+	-l)
+		list_scripts;
+    ;;
+    --list)
+		list_scripts;
     ;;
     -h)
 		help;
