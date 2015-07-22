@@ -13,7 +13,8 @@ function help {
 	echo "      -v, --version               current version of go";
 	echo "      -p, --path                  path to working directory";
 	echo "      -l, --list                  list all shell scripts available";
-	echo "      -c, --copy                  copy script into global space";
+	echo "      -c, --copy <script path>    copy script into global space";
+	echo "      -r, --remove <script name>  remove shell script";
 	echo "";
 	echo "      <script name>               will execute given shell script";
 	echo "      -f, --force <script name>   will run the script as admin user";
@@ -73,6 +74,40 @@ function list_scripts {
 	  echo "|-- $entry";
 	done
 
+	echo "";
+
+}
+
+function copy_script {
+	dir="$( dirname "${BASH_SOURCE[0]}" )";
+	scripts_dir=${dir//bin/lib}"/node_modules/go/shell-scripts";
+
+	if [[ $param_2 ]]
+	then
+		cp $param_2 $scripts_dir;
+	else 
+		help;
+	fi
+
+	echo "";
+	echo "$param_2 added to global";
+	echo "";
+}
+
+function remove_script {
+	dir="$( dirname "${BASH_SOURCE[0]}" )";
+	scripts_dir=${dir//bin/lib}"/node_modules/go/shell-scripts";
+
+	if [[ $param_2 ]]
+	then
+		rm $scripts_dir/$param_2;
+	else 
+		help;
+	fi
+
+	echo "";
+	echo "$param_2 removed from global";
+	echo "";
 }
 
 function version {
@@ -101,6 +136,18 @@ case "$param" in
     ;;
     --list)
 		list_scripts;
+    ;;
+    -c)
+		copy_script;
+    ;;
+    --copy)
+		copy_script;
+    ;;
+    -r)
+		remove_script;
+    ;;
+    --remove)
+		remove_script;
     ;;
     -h)
 		help;
