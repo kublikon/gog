@@ -1,0 +1,25 @@
+{
+    "name":"go",
+    "private":false,
+    "version":"0.0.1",
+    "description":"Global shell script manager",
+    "repository":{
+        "url":"https://github.com/kublikon/go.git",
+        "type":"git"
+    },
+    "contributors":[
+        "Jakub Szerszen <kpx.dev@gmail.com>"
+    ],
+    "bugs":{
+        "mail":"kublikon_apps@gmail.com",
+        "url":"http://github.com/kublikon/go/issues"
+    },
+    "dependencies": {
+    },
+    "devDependencies":{
+    },
+    "main":"index",
+    "engines":{
+        "node":">= 0.5.0 < 0.9.0"
+    }
+}
