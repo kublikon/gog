@@ -18,3 +18,5 @@ npm-debug.log
 .project
 .idea/
 .DS_Store
+
+shell-scripts/*
