@@ -67,7 +67,10 @@ function list_scripts {
 
 	for entry in *
 	do
-	  echo "|-- $entry";
+		if [ $entry != "README.md" ]
+		then
+	  		echo "|-- $entry";
+	  	fi
 	done
 
 	echo "";
