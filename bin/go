@@ -105,6 +105,8 @@ function new_script {
 
 	cp $param_2 $scripts_dir;
 
+	rm $param_2;
+
 	echo "";
 	echo "@param_2 added to global";
 	echo "";
