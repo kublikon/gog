@@ -12,9 +12,9 @@ Install go globally:
 Basic usage: `go <command>`, where `<command>` is one of:
 
 * `-h, --help` - general help/usage of go
-* '-v, --version' - current version of go
+* `-v, --version` - current version of go
 * `-p, --path` - path to working directory
-* '-l, --list` - list all shell scripts available
+* `-l, --list` - list all shell scripts available
 * `-c, --copy <script path>` - copy script into global space
 * `-r, --remove <script name>` - remove shell script
 * `-n  -new <script name>` - opens vim and adds script after exit
