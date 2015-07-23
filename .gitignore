@@ -20,3 +20,4 @@ npm-debug.log
 .DS_Store
 
 shell-scripts/*
+!shell-scripts/README.md

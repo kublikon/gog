@@ -1,6 +1,10 @@
 #!/bin/bash
 
 go_version="0.0.1";
+
+dir="$( dirname "${BASH_SOURCE[0]}" )";
+scripts_dir=${dir//bin/lib}"/node_modules/go/shell-scripts";
+
 param=$1;
 param_2=$2;
 
@@ -15,6 +19,7 @@ function help {
 	echo "      -l, --list                  list all shell scripts available";
 	echo "      -c, --copy <script path>    copy script into global space";
 	echo "      -r, --remove <script name>  remove shell script";
+	echo "      -n  -new <script name>      opens vim and adds script after exit";
 	echo "";
 	echo "      <script name>               will execute given shell script";
 	echo "      -f, --force <script name>   will run the script as admin user";
@@ -24,9 +29,6 @@ function help {
 }
 
 function run_script { 
-	dir="$( dirname "${BASH_SOURCE[0]}" )";
-	scripts_dir=${dir//bin/lib}"/node_modules/go/shell-scripts";
-
 	echo "";
 	echo "--------------------";
 	echo "running - $param";
@@ -40,9 +42,6 @@ function run_script {
 }
 
 function force_run_script {
-	dir="$( dirname "${BASH_SOURCE[0]}" )";
-	scripts_dir=${dir//bin/lib}"/node_modules/go/shell-scripts";
-
 	echo "";
 	echo "--------------------";
 	echo "running - sudo $param_2";
@@ -61,9 +60,6 @@ function force_run_script {
 }
 
 function list_scripts {
-	dir="$( dirname "${BASH_SOURCE[0]}" )";
-	scripts_dir=${dir//bin/lib}"/node_modules/go/shell-scripts";
-
 	echo "";
 	echo $scripts_dir;
 
@@ -79,9 +75,6 @@ function list_scripts {
 }
 
 function copy_script {
-	dir="$( dirname "${BASH_SOURCE[0]}" )";
-	scripts_dir=${dir//bin/lib}"/node_modules/go/shell-scripts";
-
 	if [[ $param_2 ]]
 	then
 		cp $param_2 $scripts_dir;
@@ -95,9 +88,6 @@ function copy_script {
 }
 
 function remove_script {
-	dir="$( dirname "${BASH_SOURCE[0]}" )";
-	scripts_dir=${dir//bin/lib}"/node_modules/go/shell-scripts";
-
 	if [[ $param_2 ]]
 	then
 		rm $scripts_dir/$param_2;
@@ -110,6 +100,16 @@ function remove_script {
 	echo "";
 }
 
+function new_script {
+	vim "$param_2";
+
+	cp $param_2 $scripts_dir;
+
+	echo "";
+	echo "@param_2 added to global";
+	echo "";
+}
+
 function version {
 	echo "";
 	echo "go@$go_version";
@@ -117,9 +117,6 @@ function version {
 }
 
 function path {
-	dir="$( dirname "${BASH_SOURCE[0]}" )";
-	scripts_dir=${dir//bin/lib}"/node_modules/go/shell-scripts";
-
 	echo "";
 	echo "present working directory: `pwd`";
 	echo "global working directory:  $( dirname "${BASH_SOURCE[0]}" )";
@@ -148,6 +145,12 @@ case "$param" in
     ;;
     --remove)
 		remove_script;
+    ;;
+    -n)
+		new_script;
+    ;;
+    --new)
+		new_script;
     ;;
     -h)
 		help;

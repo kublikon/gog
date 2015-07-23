@@ -9,14 +9,14 @@ Install go globally:
 2. `npm install -g <path to project>`
 
 #### Usage
-Basic usage: 
+Basic usage: `go <command>`, where `<command>` is one of:
 
-```
-go <shell script name>
-```
-
-List all shell scripts:
-
-```
-go -l
-```
+* `-h, --help` - general help/usage of go
+* '-v, --version' - current version of go
+* `-p, --path` - path to working directory
+* '-l, --list` - list all shell scripts available
+* `-c, --copy <script path>` - copy script into global space
+* `-r, --remove <script name>` - remove shell script
+* `-n  -new <script name>` - opens vim and adds script after exit
+* `<script name>` - will execute given shell script
+* `-f, --force <script name>` - will run the script as admin user
