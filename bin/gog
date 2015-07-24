@@ -1,9 +1,9 @@
 #!/bin/bash
 
-go_version="0.0.1";
+gog_version="0.0.1";
 
 dir="$( dirname "${BASH_SOURCE[0]}" )";
-scripts_dir=${dir//bin/lib}"/node_modules/go!/shell-scripts";
+scripts_dir=${dir//bin/lib}"/node_modules/gog/shell-scripts";
 
 param=$1;
 param_2=$2;
@@ -18,11 +18,11 @@ param_10=$10;
 
 function help {
 	echo "";
-	echo "Usage: go! <command>";
+	echo "Usage: gog <command>";
 	echo "";
 	echo "where <command> is one of:";
-	echo "      -h, --help                  general help/usage of go";
-	echo "      -v, --version               current version of go";
+	echo "      -h, --help                  general help/usage of gog";
+	echo "      -v, --version               current version of gog";
 	echo "      -p, --path                  path to working directory";
 	echo "      -l, --list                  list all shell scripts available";
 	echo "      -c, --copy <script path>    copy script into global space";
@@ -32,7 +32,7 @@ function help {
 	echo "      <script name>               will execute given shell script";
 	echo "      -f, --force <script name>   will run the script as admin user";
 	echo "";
-	echo "go!@$go_version - global working directory: ${BASH_SOURCE[0]}";
+	echo "gog@$gog_version - global working directory: ${BASH_SOURCE[0]}";
 	echo "";
 }
 
@@ -125,7 +125,7 @@ function new_script {
 
 function version {
 	echo "";
-	echo "go!@$go_version";
+	echo "gog@$gog_version";
 	echo "";
 }
 

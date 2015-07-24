@@ -1,18 +1,18 @@
-# go!
+# gog
 
-Go is a global shell script runner. It allows you to execute scripts from any location in your terminal.
+Gog is a global shell script runner. It allows you to execute scripts from any location in your terminal.
 
 #### Setup
-Install go globally:
+Install gog globally:
 
-1. Clone the repo: `git clone https://github.com/kublikon/go.git`
+1. Clone the repo: `git clone https://github.com/kublikon/gog.git`
 2. `npm install -g <path to project>`
 
 #### Usage
-Basic usage: `go! <command>`, where `<command>` is one of:
+Basic usage: `gog <command>`, where `<command>` is one of:
 
-* `-h, --help` - general help/usage of go
-* `-v, --version` - current version of go
+* `-h, --help` - general help/usage of gog
+* `-v, --version` - current version of gog
 * `-p, --path` - path to working directory
 * `-l, --list` - list all shell scripts available
 * `-c, --copy <script path>` - copy script into global space
