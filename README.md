@@ -1,12 +1,18 @@
-# gog
+# gog (go-global)
 
 Gog is a global shell script runner. It allows you to execute scripts from any location in your terminal.
 
 #### Setup
 Install gog globally:
 
+```
+npm install -g gog
+```
+
+or
+
 1. Clone the repo: `git clone https://github.com/kublikon/gog.git`
-2. `npm install -g <path to project>`
+2. `npm install -g <path to gog>`
 
 #### Usage
 Basic usage: `gog <command>`, where `<command>` is one of:
