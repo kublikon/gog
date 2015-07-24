@@ -1,4 +1,4 @@
-# go
+# go!
 
 Go is a global shell script runner. It allows you to execute scripts from any location in your terminal.
 
@@ -9,7 +9,7 @@ Install go globally:
 2. `npm install -g <path to project>`
 
 #### Usage
-Basic usage: `go <command>`, where `<command>` is one of:
+Basic usage: `go! <command>`, where `<command>` is one of:
 
 * `-h, --help` - general help/usage of go
 * `-v, --version` - current version of go

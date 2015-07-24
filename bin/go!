@@ -3,7 +3,7 @@
 go_version="0.0.1";
 
 dir="$( dirname "${BASH_SOURCE[0]}" )";
-scripts_dir=${dir//bin/lib}"/node_modules/go/shell-scripts";
+scripts_dir=${dir//bin/lib}"/node_modules/go!/shell-scripts";
 
 param=$1;
 param_2=$2;
@@ -18,7 +18,7 @@ param_10=$10;
 
 function help {
 	echo "";
-	echo "Usage: go <command>";
+	echo "Usage: go! <command>";
 	echo "";
 	echo "where <command> is one of:";
 	echo "      -h, --help                  general help/usage of go";
@@ -32,7 +32,7 @@ function help {
 	echo "      <script name>               will execute given shell script";
 	echo "      -f, --force <script name>   will run the script as admin user";
 	echo "";
-	echo "go@$go_version - global working directory: ${BASH_SOURCE[0]}";
+	echo "go!@$go_version - global working directory: ${BASH_SOURCE[0]}";
 	echo "";
 }
 
@@ -125,7 +125,7 @@ function new_script {
 
 function version {
 	echo "";
-	echo "go@$go_version";
+	echo "go!@$go_version";
 	echo "";
 }
 
