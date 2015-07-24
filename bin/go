@@ -7,6 +7,14 @@ scripts_dir=${dir//bin/lib}"/node_modules/go/shell-scripts";
 
 param=$1;
 param_2=$2;
+param_3=$3;
+param_4=$4;
+param_5=$5;
+param_6=$6;
+param_7=$7;
+param_8=$8;
+param_9=$9;
+param_10=$10;
 
 function help {
 	echo "";
@@ -38,7 +46,7 @@ function run_script {
 
 	chmod a+rwx $param;
 
-	bash ./$param;
+	bash ./$param $param_2 $param_3 $param_4 $param_5 $param_6 $param_7 $param_8 $param_9;
 }
 
 function force_run_script {
@@ -53,7 +61,7 @@ function force_run_script {
 	then
 		chmod a+rwx $param_2;
 
-		sudo bash ./$param_2;
+		sudo bash ./$param_2 $param_3 $param_4 $param_5 $param_6 $param_7 $param_8 $param_9 $param_10;
 	else 
 		help;
 	fi
