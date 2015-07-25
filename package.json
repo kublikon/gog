@@ -1,25 +1,34 @@
 {
     "name":"gog",
-    "private":false,
     "version":"0.0.1",
     "description":"Global shell script manager",
+    "contributors":[
+        "Jakub Szerszen <kpx.dev@gmail.com>"
+    ],
+    "main":"./bin/gog",
+    "directories": {
+        "bin": "./bin"
+    },
     "repository":{
         "url":"https://github.com/kublikon/gog.git",
         "type":"git"
     },
-    "contributors":[
-        "Jakub Szerszen <kpx.dev@gmail.com>"
-    ],
     "bugs":{
         "mail":"kublikon_apps@gmail.com",
         "url":"http://github.com/kublikon/gog/issues"
     },
-    "directories": {
-        "bin": "./bin"
-    },
+    "keywords": [
+        "scripts",
+        "shell scripts",
+        "global",
+        "terminal",
+        "shorthand"
+    ],
     "dependencies": {
     },
     "devDependencies":{
     },
-    "main":"./bin/gog"
+    "preferGlobal": true,
+    "private":false,
+    "license": "MIT"
 }

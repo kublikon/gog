@@ -2,7 +2,7 @@
 
 Gog is a global shell script runner. It allows you to execute scripts from any location in your terminal.
 
-#### Setup
+### Setup
 Install gog globally:
 
 ```
@@ -14,7 +14,7 @@ or
 1. Clone the repo: `git clone https://github.com/kublikon/gog.git`
 2. `npm install -g <path to gog>`
 
-#### Usage
+### Usage
 Basic usage: `gog <command>`, where `<command>` is one of:
 
 * `-h, --help` - general help/usage of gog
@@ -26,3 +26,13 @@ Basic usage: `gog <command>`, where `<command>` is one of:
 * `-n  -new <script name>` - opens vim and adds script after exit
 * `<script name>` - will execute given shell script
 * `-f, --force <script name>` - will run the script as admin user
+
+passing parameters works very much the same way as running any regular script:
+
+```
+gog <script name> <parameter> <parameter> <parameter> ...
+
+or
+
+gog -f <script name> <parameter> <parameter> <parameter> ...
+```
