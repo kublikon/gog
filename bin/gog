@@ -1,6 +1,6 @@
 #!/bin/bash
 
-gog_version="0.0.1";
+gog_version="0.0.3";
 
 dir="$( dirname "${BASH_SOURCE[0]}" )";
 scripts_dir=${dir//bin/lib}"/node_modules/gog/shell-scripts";
@@ -27,7 +27,8 @@ function help {
 	echo "      -l, --list                  list all shell scripts available";
 	echo "      -c, --copy <script path>    copy script into global space";
 	echo "      -r, --remove <script name>  remove shell script";
-	echo "      -n  -new <script name>      opens vim and adds script after exit";
+	echo "      -n  --new <script name>     opens vim and adds script after exit";
+	echo "      -e, --edit <script name>    edits global script in vim";
 	echo "";
 	echo "      <script name>               will execute given shell script";
 	echo "      -f, --force <script name>   will run the script as admin user";
@@ -119,7 +120,15 @@ function new_script {
 	rm $param_2;
 
 	echo "";
-	echo "@param_2 added to global";
+	echo "$param_2 added to global";
+	echo "";
+}
+
+function edit_script {	
+	vim "$scripts_dir/$param_2";
+
+	echo "";
+	echo "$param_2 script edited";
 	echo "";
 }
 
@@ -164,6 +173,12 @@ case "$param" in
     ;;
     --new)
 		new_script;
+    ;;
+    -e)
+		edit_script;
+    ;;
+    --edit)
+		edit_script;
     ;;
     -h)
 		help;

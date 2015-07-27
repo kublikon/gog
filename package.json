@@ -1,6 +1,6 @@
 {
     "name":"gog",
-    "version":"0.0.2",
+    "version":"0.0.3",
     "description":"Global shell script manager",
     "contributors":[
         "Jakub Szerszen <kpx.dev@gmail.com>"
@@ -18,8 +18,10 @@
         "url":"http://github.com/kublikon/gog/issues"
     },
     "keywords": [
+        "script",
         "scripts",
         "shell scripts",
+        "bash scripts",
         "global",
         "terminal",
         "shorthand"
@@ -29,6 +31,6 @@
     "devDependencies":{
     },
     "preferGlobal": true,
-    "private":false,
+    "private": false,
     "license": "MIT"
 }
