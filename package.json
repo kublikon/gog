@@ -1,10 +1,14 @@
 {
     "name":"gog",
-    "version":"0.0.3",
+    "version":"0.0.4",
     "description":"Global shell script manager",
     "contributors":[
         "Jakub Szerszen <kpx.dev@gmail.com>"
     ],
+    "scripts": {
+        "postinstall": "./bin/gog-setup",
+        "postuninstall": "./bin/gog-uninstall"
+    },
     "main":"./bin/gog",
     "directories": {
         "bin": "./bin"

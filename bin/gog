@@ -1,9 +1,16 @@
 #!/bin/bash
 
-gog_version="0.0.3";
+gog_version="0.0.4";
 
 dir="$( dirname "${BASH_SOURCE[0]}" )";
-scripts_dir=${dir//bin/lib}"/node_modules/gog/shell-scripts";
+global_gog_path="/usr/local/lib/gog";
+
+if [ -d "$global_gog_path" ]
+then
+	scripts_dir="/usr/local/lib/gog";
+else 
+	scripts_dir=${dir//bin/lib}"/node_modules/gog/shell-scripts";
+fi
 
 param=$1;
 param_2=$2;
@@ -76,7 +83,7 @@ function list_scripts {
 
 	for entry in *
 	do
-		if [ $entry != "README.md" ]
+		if [ $entry != "README.md" ] && [ $entry != "*" ]
 		then
 	  		echo "|-- $entry";
 	  	fi
