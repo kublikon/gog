@@ -1,6 +1,6 @@
 #!/bin/bash
 
-gog_version="0.0.4";
+gog_version="0.0.5";
 
 dir="$( dirname "${BASH_SOURCE[0]}" )";
 global_gog_path="/usr/local/lib/gog";
