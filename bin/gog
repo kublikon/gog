@@ -1,6 +1,6 @@
 #!/bin/bash
 
-gog_version="0.0.6";
+gog_version="0.0.8";
 
 dir="$( dirname "${BASH_SOURCE[0]}" )";
 global_gog_path="/usr/local/lib/gog";
@@ -54,7 +54,28 @@ function run_script {
 
 	chmod a+rwx $param;
 
-	bash ./$param $param_2 $param_3 $param_4 $param_5 $param_6 $param_7 $param_8 $param_9;
+	read -r header < $param;
+
+	if [[ $header =~ "#!" ]]
+	then
+
+		if [[ $header =~ "bash" ]]
+		then
+			bash ./$param $param_2 $param_3 $param_4 $param_5 $param_6 $param_7 $param_8 $param_9;
+		elif [[ $header =~ "node" ]]
+		then
+			node ./$param $param_2 $param_3 $param_4 $param_5 $param_6 $param_7 $param_8 $param_9;
+		elif [[ $header =~ "python" ]]
+		then
+			python ./$param $param_2 $param_3 $param_4 $param_5 $param_6 $param_7 $param_8 $param_9;
+		else
+			bash ./$param $param_2 $param_3 $param_4 $param_5 $param_6 $param_7 $param_8 $param_9;
+		fi
+
+	else
+		bash ./$param $param_2 $param_3 $param_4 $param_5 $param_6 $param_7 $param_8 $param_9;
+	fi
+
 }
 
 function force_run_script {
@@ -69,7 +90,28 @@ function force_run_script {
 	then
 		chmod a+rwx $param_2;
 
-		sudo bash ./$param_2 $param_3 $param_4 $param_5 $param_6 $param_7 $param_8 $param_9 $param_10;
+		read -r header < $param_2;
+
+		if [[ $header =~ "#!" ]]
+		then
+
+			if [[ $header =~ "bash" ]]
+			then
+				sudo bash ./$param_2 $param_3 $param_4 $param_5 $param_6 $param_7 $param_8 $param_9 $param_10;
+			elif [[ $header =~ "node" ]]
+			then
+				sudo node ./$param_2 $param_3 $param_4 $param_5 $param_6 $param_7 $param_8 $param_9 $param_10;
+			elif [[ $header =~ "python" ]]
+			then
+				sudo python ./$param_2 $param_3 $param_4 $param_5 $param_6 $param_7 $param_8 $param_9 $param_10;
+			else
+				sudo bash ./$param_2 $param_3 $param_4 $param_5 $param_6 $param_7 $param_8 $param_9 $param_10;
+			fi
+
+		else
+			sudo bash ./$param_2 $param_3 $param_4 $param_5 $param_6 $param_7 $param_8 $param_9 $param_10;
+		fi
+
 	else
 		help;
 	fi
