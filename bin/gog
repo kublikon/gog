@@ -1,6 +1,6 @@
 #!/bin/bash
 
-gog_version="0.0.5";
+gog_version="0.0.6";
 
 dir="$( dirname "${BASH_SOURCE[0]}" )";
 global_gog_path="/usr/local/lib/gog";
@@ -8,7 +8,7 @@ global_gog_path="/usr/local/lib/gog";
 if [ -d "$global_gog_path" ]
 then
 	scripts_dir="/usr/local/lib/gog";
-else 
+else
 	scripts_dir=${dir//bin/lib}"/node_modules/gog/shell-scripts";
 fi
 
@@ -44,7 +44,7 @@ function help {
 	echo "";
 }
 
-function run_script { 
+function run_script {
 	echo "";
 	echo "--------------------";
 	echo "running - $param";
@@ -70,7 +70,7 @@ function force_run_script {
 		chmod a+rwx $param_2;
 
 		sudo bash ./$param_2 $param_3 $param_4 $param_5 $param_6 $param_7 $param_8 $param_9 $param_10;
-	else 
+	else
 		help;
 	fi
 }
@@ -97,7 +97,7 @@ function copy_script {
 	if [[ $param_2 ]]
 	then
 		cp $param_2 $scripts_dir;
-	else 
+	else
 		help;
 	fi
 
@@ -109,14 +109,24 @@ function copy_script {
 function remove_script {
 	if [[ $param_2 ]]
 	then
-		rm $scripts_dir/$param_2;
-	else 
+		echo "";
+		echo "Are you sure you want to remove $param_2 [y/n]?";
+		echo "";
+
+		read input_answer;
+
+		if [ $input_answer = 'y' ]
+		then
+			rm $scripts_dir/$param_2;
+
+			echo "";
+			echo "$param_2 removed from global";
+			echo "";
+		fi
+
+	else
 		help;
 	fi
-
-	echo "";
-	echo "$param_2 removed from global";
-	echo "";
 }
 
 function new_script {
@@ -131,7 +141,7 @@ function new_script {
 	echo "";
 }
 
-function edit_script {	
+function edit_script {
 	vim "$scripts_dir/$param_2";
 
 	echo "";
