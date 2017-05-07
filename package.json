@@ -1,6 +1,6 @@
 {
     "name":"gog",
-    "version":"0.0.5",
+    "version":"0.0.6",
     "description":"Global shell script manager",
     "contributors":[
         "Jakub Szerszen <kpx.dev@gmail.com>"
@@ -22,6 +22,7 @@
         "url":"http://github.com/kublikon/gog/issues"
     },
     "keywords": [
+        "cli",
         "script",
         "scripts",
         "shell scripts",

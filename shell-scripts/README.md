@@ -1,3 +1,3 @@
 # Shell scripts
 
-Location of global scripts
+Location of users custom global scripts
