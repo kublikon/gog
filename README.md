@@ -1,5 +1,5 @@
 <h1 align="center">
-	<img src="/img/gog.png?raw=true" alt="gog" width="200">
+	<img src="https://raw.githubusercontent.com/kublikon/gog/master/img/gog.png" alt="gog" width="200">
 	<br>
 	gog (go-global)
   <a href="https://npmjs.org/package/gog">
@@ -35,7 +35,7 @@ Basic usage: `gog <command>`, where `<command>` is one of:
    -r, --remove <script name> - remove shell script
    -n  --new <script name>    - opens vim and adds script after exit
    -e, --edit <script name>   - edits global script in vim
-   
+
    <script name>              - will execute given shell script
    -f, --force <script name>  - will run the script as admin user
 ```
