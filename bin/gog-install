@@ -23,6 +23,7 @@ if [ -d "$lib" ];
 then
 	if [ ! -d "$lib/gog" ]
 	then
+		
 		mkdir "$lib/gog";
 	fi
 fi
