@@ -1,12 +1,13 @@
 {
     "name":"gog",
-    "version":"0.0.8",
+    "version":"0.0.9",
     "description":"Global shell script manager",
+    "homepage": "https://gog.codes/",
     "contributors":[
-        "Jakub Szerszen <kpx.dev@gmail.com>"
+        "Jakub Szerszen <kublikon.apps@gmail.com>"
     ],
     "scripts": {
-        "postinstall": "./bin/gog-setup",
+        "postinstall": "./bin/gog-install",
         "postuninstall": "./bin/gog-uninstall"
     },
     "main":"./bin/gog",
@@ -18,7 +19,7 @@
         "type":"git"
     },
     "bugs":{
-        "mail":"kublikon_apps@gmail.com",
+        "mail":"kublikon.apps@gmail.com",
         "url":"http://github.com/kublikon/gog/issues"
     },
     "keywords": [
@@ -27,6 +28,8 @@
         "scripts",
         "shell scripts",
         "bash scripts",
+        "python scripts",
+        "node scripts",
         "global",
         "terminal",
         "shorthand"
@@ -37,5 +40,5 @@
     },
     "preferGlobal": true,
     "private": false,
-    "license": "MIT"
+    "license": "Artistic-2.0"
 }

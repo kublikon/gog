@@ -1,6 +1,6 @@
 #!/bin/bash
 
-gog_version="0.0.8";
+gog_version="0.0.9";
 
 dir="$( dirname "${BASH_SOURCE[0]}" )";
 global_gog_path="/usr/local/lib/gog";
@@ -11,6 +11,43 @@ then
 else
 	scripts_dir=${dir//bin/lib}"/node_modules/gog/shell-scripts";
 fi
+
+#
+# colors
+#
+
+PURPLE='\033[0;35m'
+RED='\033[31m'
+GRAY='\033[90m'
+NC='\033[0m'
+
+#
+# keys
+#
+
+UP=$'A'
+DOWN=$'B'
+RETURN=$''
+
+#
+# search
+#
+
+SEARCH=""
+LIST=()
+SELECTED_SEARCH=""
+SELECTED_NAME=""
+
+#
+# service
+#
+
+SERVICE="http://52.11.135.48:8080/gog"
+WEB="http://52.11.135.48:8080/scripts"
+
+#
+# params
+#
 
 param=$1;
 param_2=$2;
@@ -23,36 +60,348 @@ param_8=$8;
 param_9=$9;
 param_10=$10;
 
-function help {
-	echo "";
-	echo "Usage: gog <command>";
-	echo "";
-	echo "where <command> is one of:";
+#
+# Common
+#
+
+fullscreen_enter() {
+	tput smcup
+  stty -echo
+	cursor_hide
+}
+
+fullscreen_leave() {
+	tput rmcup
+  stty echo
+	cursor_show
+}
+
+cursor_hide() {
+  printf "\e[?25l"
+}
+
+cursor_show() {
+  printf "\e[?25h"
+}
+
+erase_line() {
+  printf "\033[1A\033[2K"
+}
+
+#
+# draw: generic running header
+#
+
+draw_header() {
+	printf "\n  ${PURPLE}gog: running - $@${NC}\n\n"
+}
+
+#
+# draw: generic install header
+#
+
+draw_install() {
+	printf "\n  ${PURPLE}gog: installing - $@${NC}\n"
+}
+
+#
+# draw: generic error handeling
+#
+
+draw_error() {
+	printf "\n  ${RED}gog: error - $@${NC}\n\n"
+}
+
+#
+# draw: service 404
+#
+
+draw_not_found() {
+	printf "\n  ${RED}gog: 404 - $@${NC}\n\n"
+}
+
+#
+# draw: generic process completion handeling
+#
+
+draw_feedback() {
+	printf "\n  ${GRAY}gog: $@${NC}\n\n"
+}
+
+#
+# draw: generig question handeling
+#
+
+draw_question() {
+	printf "\n  ${PURPLE}gog: $@? [y/n]${NC}\n\n"
+}
+
+#
+# draw: short help
+#
+
+draw_help() {
+	printf "\n  Usage: gog <command>\n\n";
+	printf "  ${GRAY}where <command> is one of:${NC}\n";
 	echo "      -h, --help                  general help/usage of gog";
 	echo "      -v, --version               current version of gog";
 	echo "      -p, --path                  path to working directory";
 	echo "      -l, --list                  list all shell scripts available";
+	echo "      -s, --search                starts script search"
 	echo "      -c, --copy <script path>    copy script into global space";
 	echo "      -r, --remove <script name>  remove shell script";
-	echo "      -n  --new <script name>     opens vim and adds script after exit";
+	echo "      -n, --new <script name>     opens vim and adds script after exit";
 	echo "      -e, --edit <script name>    edits global script in vim";
-	echo "";
-	echo "      <script name>               will execute given shell script";
-	echo "      -f, --force <script name>   will run the script as admin user";
-	echo "";
-	echo "gog@$gog_version - global working directory: ${BASH_SOURCE[0]}";
-	echo "";
+
+	printf "\n\n  gog <script name>               will execute given shell script\n\n";
+	printf "  ${GRAY}gog@$gog_version - global working directory: ${BASH_SOURCE[0]}${NC}\n\n";
 }
 
-function run_script {
-	echo "";
-	echo "--------------------";
-	echo "running - $param";
-	echo "--------------------";
+#
+# draw: full help
+#
+
+draw_help_full() {
+	printf "\n  ${GRAY}version:${NC} gog@$gog_version\n  ${GRAY}global working directory:${NC} ${BASH_SOURCE[0]}\n"
+	printf "\n  Usage of gog:\n"
+	printf "\n  gog <script name>           will execute given script from the global working directory"
+	printf "\n  gog <script name> <param>   will execute given script and pass parameters into it (maximum 9 parameters)\n\n"
+
+	printf "\n  Searching for new scripts:\n"
+	printf "\n  gog -s ${GRAY}or${NC} gog --search         starts search by script name"
+	printf "\n  gog -s -d ${GRAY}or${NC} gog --search -d   starts search by description"
+	printf "\n  gog -s -k ${GRAY}or${NC} gog --search -k   starts search by keywords\n"
+	printf "\n  ${GRAY}Begin by typing the key functionality you are looking for.\n  You can navigate through the search results by using the up/down arrows and select the desired script by pressing enter.${NC} \n\n"
+
+	printf "\n  Installing new scripts:\n"
+	printf "\n  gog -i <script name> ${GRAY}or${NC} gog --install<script name>                       installs the latest version of script"
+	printf "\n  gog -i <script name>@<version> ${GRAY}or${NC} gog --install<script name>@<version>   installs specific version of a script\n\n"
+
+	printf "\n  Information commands:\n"
+	printf "\n  gog -h ${GRAY}or${NC} gog --help                    will display detailed help\n"
+	printf "\n  gog -v ${GRAY}or${NC} gog --version                 will display installed version of gog CLI"
+	printf "\n  gog -v -clean ${GRAY}or${NC} gog --version -clean   will display sanitized version of gog CLI\n"
+
+	printf "\n  gog -p ${GRAY}or${NC} gog --path         will display paths for global, current working directories as well as location of gog CLI\n"
+	printf "\n  gog -l ${GRAY}or${NC} gog --list         will display all globally installed scripts in gog CLI"
+	printf "\n  gog -l -d ${GRAY}or${NC} gog --list -d   will display all globally installed scripts with description"
+	printf "\n  gog -l -k ${GRAY}or${NC} gog --list -k   will display all globally installed scripts with keywords"
+	printf "\n  gog -l -v ${GRAY}or${NC} gog --list -v   will display all globally installed scripts with versions\n"
+	printf "\n  gog -d <script name> ${GRAY}or${NC} gog --detail <script name>   will open script in browser with additional information\n\n"
+
+	printf "\n  Utility commands:\n"
+	printf "\n  gog -c <script path> ${GRAY}or${NC} gog --copy <script path>              will copy script from provided path into gog CLI"
+	printf "\n  gog -r <script name> ${GRAY}or${NC} gog --remove <script name>            will remove script from gog CLI"
+	printf "\n  gog -n <script name> ${GRAY}or${NC} gog --new <script name>               creates a new script in vim and saves it to gog CLI\n"
+
+	printf "\n  gog -e <script name> ${GRAY}or${NC} gog --edit <script name>              allows you to edit script in vim"
+	printf "\n  gog -e <script name> -ide ${GRAY}or${NC} gog --edit <script name>  -ide   allows you to edit script in your default ide \n"
+
+	printf "\n  ${GRAY}For updates or additional help checkout https://github.com/kublikon/gog${NC}\n\n"
+}
+
+#
+# draw: script search view
+#
+
+draw_search() {
+	clear
+
+	printf "\n  searching: ${GRAY}$1${NC}\n"
+
+	draw_list "$2"
+}
+
+#
+# draw: search list for search view
+#
+
+draw_list() {
+	SELECTED_SEARCH=$1
+
+	for item in "${LIST[@]}"; do
+		if [[ $item == $SELECTED_SEARCH ]]
+		then
+			printf "\n  ${PURPLE}>${NC} ${item:0:`expr "$item" : '.*:'`}${GRAY} - ${item#*:}${NC} ${PURPLE}<${NC}"
+		else
+			printf "\n    ${item:0:`expr "$item" : '.*:'`}${GRAY} - ${item#*:}${NC}"
+		fi
+
+	done
+}
+
+#
+# utility: ensure script exists in library
+#
+
+ensure_script() {
+
+	local script=$@
+
+	if [[ "${script:0:1}" == "-" ]]
+	then
+		draw_error "script names can't start with '-' character"
+		exit
+	fi
+
+	found_script=$(ls | grep $@)
+
+	if [[ -z  $found_script  ]]
+	then
+		draw_feedback "$@ not installed"
+		exit
+	fi
+}
+
+#
+# utility API: get download
+#
+
+get_download() {
+
+	# ensure selection is not empty
+	if [[ !  -z  $SELECTED_SEARCH  ]]
+	then
+
+		script_name="${SELECTED_SEARCH:0:`expr "$SELECTED_SEARCH" : '.*:'`}"
+		script_name="${script_name//:}"
+
+		draw_feedback "installing $script_name"
+		local content=$(curl -s -X GET "$SERVICE/download/$script_name")
+
+		echo "$content" > "$scripts_dir/$script_name"
+
+		SEARCH=""
+	fi
+}
+
+#
+# utility API: get search
+#
+
+get_search() {
+
+	if [[ $param_2 == "-n" ]]
+	then
+		filter_scripts $(curl -s -X GET "$SERVICE/name/$SEARCH")
+	elif [[ $param_2 == "-d" ]]
+	then
+		filter_scripts $(curl -s -X GET "$SERVICE/description/$SEARCH")
+	elif [[ $param_2 == "-k" ]]
+	then
+		filter_scripts $(curl -s -X GET "$SERVICE/keyword/$SEARCH")
+	else
+		filter_scripts $(curl -s -X GET "$SERVICE/name/$SEARCH")
+	fi
+}
+
+#
+# utility: filters returned search results
+#
+
+filter_scripts() {
+	IFS=';' read -r -a LIST <<< "$@"
+}
+
+#
+# utility: list search scripts
+#
+
+list_search_scripts() {
+  for script in "${LIST[@]}"; do
+    echo $script
+  done
+}
+
+#
+# utility: output script before selected
+#
+
+prev_script() {
+	list_search_scripts | grep "$SELECTED_SEARCH" -B 1 | head -n 1
+}
+
+#
+# utility: output script after selected
+#
+
+next_script() {
+	list_search_scripts | grep "$SELECTED_SEARCH" -A 1 | tail -n 1
+}
+
+
+#
+# main: search for scripts
+#
+
+search() {
+	fullscreen_enter
+	# get_search $param_2 // for testing
+
+	draw_search "$SEARCH" "${LIST[0]}"
+
+	# TODO: find a way to check delete key - line 240
+
+	while true; do
+    read -n 1 k
+
+		if [[ "$k" =~ [0-9a-z] ]]
+		then
+			SEARCH+="$k"
+
+			get_search "$SEARCH"
+			draw_search "$SEARCH" "$SELECTED_SEARCH"
+		elif [[ "$k" == "\e[3~" ]]
+		then
+			SEARCH=${SEARCH:0:(${#SEARCH}-1)}
+
+			get_search "$SEARCH"
+			draw_search "$SEARCH" "$SELECTED_SEARCH"
+		fi
+
+    case "$k" in
+      $UP)
+				draw_search "$SEARCH" "$(prev_script)"
+        ;;
+      $DOWN)
+				draw_search "$SEARCH" "$(next_script)"
+        ;;
+			$RETURN)
+				fullscreen_leave
+				get_download
+				exit
+				;;
+    esac
+  done
+}
+
+#
+# main: show script detail on web
+#
+
+detail() {
+	if which xdg-open > /dev/null
+	then
+	  xdg-open "$WEB/$param_2";
+	elif which gnome-open > /dev/null
+	then
+	  gnome-open "$WEB/$param_2";
+	else
+		open "$WEB/$param_2";
+	fi
+}
+
+#
+# main: run global script
+#
+
+run_script() {
 
 	cd $scripts_dir
 
-	chmod a+rwx $param;
+	ensure_script $param
+	draw_header "$param"
+	chmod a+rwx $param
 
 	read -r header < $param;
 
@@ -78,82 +427,68 @@ function run_script {
 
 }
 
-function force_run_script {
-	echo "";
-	echo "--------------------";
-	echo "running - sudo $param_2";
-	echo "--------------------";
+#
+# main: list all global scripts
+#
 
-	cd $scripts_dir
-
-	if [[ $param_2 ]]
-	then
-		chmod a+rwx $param_2;
-
-		read -r header < $param_2;
-
-		if [[ $header =~ "#!" ]]
-		then
-
-			if [[ $header =~ "bash" ]]
-			then
-				sudo bash ./$param_2 $param_3 $param_4 $param_5 $param_6 $param_7 $param_8 $param_9 $param_10;
-			elif [[ $header =~ "node" ]]
-			then
-				sudo node ./$param_2 $param_3 $param_4 $param_5 $param_6 $param_7 $param_8 $param_9 $param_10;
-			elif [[ $header =~ "python" ]]
-			then
-				sudo python ./$param_2 $param_3 $param_4 $param_5 $param_6 $param_7 $param_8 $param_9 $param_10;
-			else
-				sudo bash ./$param_2 $param_3 $param_4 $param_5 $param_6 $param_7 $param_8 $param_9 $param_10;
-			fi
-
-		else
-			sudo bash ./$param_2 $param_3 $param_4 $param_5 $param_6 $param_7 $param_8 $param_9 $param_10;
-		fi
-
-	else
-		help;
-	fi
-}
-
-function list_scripts {
-	echo "";
-	echo $scripts_dir;
+list_scripts() {
+	printf "\n  ${GRAY}$scripts_dir${NC}\n"
 
 	cd $scripts_dir;
+
+	local files=(*)
+	local last=${files[$(( ${#files[*]} - 1 ))]}
 
 	for entry in *
 	do
 		if [ $entry != "README.md" ] && [ $entry != "*" ]
 		then
-	  		echo "|-- $entry";
-	  	fi
+
+			if [[ $param_2 == '-d' ]]
+			then
+				description=$(grep -F 'description:' $entry)
+			elif [[ $param_2 == '-k' ]]
+			then
+				description=$(grep -F 'keywords:' $entry)
+			elif [[ $param_2 == '-v' ]]
+			then
+				description=$(grep -F 'version:' $entry)
+			fi
+
+			if [[ $entry == $last ]]
+			then
+				printf "  └── $entry ${GRAY}${description/#*:/-}${NC}\n\n";
+			else
+	  		printf "  ├── $entry ${GRAY}${description/#*:/-}${NC}\n";
+			fi
+
+	  fi
 	done
-
-	echo "";
-
 }
 
-function copy_script {
+#
+# main: copy script from path
+#
+
+copy_script() {
 	if [[ $param_2 ]]
 	then
 		cp $param_2 $scripts_dir;
 	else
-		help;
+		draw_help;
 	fi
 
-	echo "";
-	echo "$param_2 added to global";
-	echo "";
+	draw_feedback "$param_2 added to global"
 }
 
-function remove_script {
+#
+# main: remove script from gog
+#
+
+remove_script() {
 	if [[ $param_2 ]]
 	then
-		echo "";
-		echo "Are you sure you want to remove $param_2 [y/n]?";
-		echo "";
+		draw_question "are you sure you want to remove $param_2"
 
 		read input_answer;
 
@@ -161,109 +496,174 @@ function remove_script {
 		then
 			rm $scripts_dir/$param_2;
 
-			echo "";
-			echo "$param_2 removed from global";
-			echo "";
+			draw_feedback "$param_2 removed from global"
 		fi
 
 	else
-		help;
+		draw_help;
 	fi
 }
 
-function new_script {
-	vim "$param_2";
+#
+# main: create new script in vim
+#
 
-	cp $param_2 $scripts_dir;
+new_script() {
 
-	rm $param_2;
+	if [[ "$param_2" ]]
+	then
+		vim "$param_2";
 
-	echo "";
-	echo "$param_2 added to global";
-	echo "";
+		cp $param_2 $scripts_dir;
+		rm $param_2;
+
+		draw_feedback "$param_2 added to global"
+	else
+		draw_feedback "please include script name"
+	fi
 }
 
-function edit_script {
-	vim "$scripts_dir/$param_2";
+#
+# main: edit existing script
+#
 
-	echo "";
-	echo "$param_2 script edited";
-	echo "";
+edit_script() {
+
+	if [[ "$param_2" ]]
+	then
+
+		if [ "$param_3" == '-ide' ]
+		then
+			open -t "$scripts_dir/$param_2"
+		else
+			vim "$scripts_dir/$param_2"
+		fi
+
+		draw_feedback "$param_2 script edited"
+	else
+		draw_feedback "please include script name"
+	fi
 }
 
-function version {
-	echo "";
-	echo "gog@$gog_version";
-	echo "";
+#
+# main: install script from service
+#
+
+install_script() {
+
+	draw_install "$param_2"
+
+	local content=$(curl -s -X GET "$SERVICE/install/$param_2")
+
+	if [[ "$content" == "404" ]]
+	then
+		draw_not_found "script $param_2 not found"
+	else
+		echo "$content" > "$scripts_dir/$param_2"
+
+		draw_feedback "$param_2 installed"
+	fi
 }
 
-function path {
-	echo "";
-	echo "present working directory: `pwd`";
-	echo "global working directory:  $( dirname "${BASH_SOURCE[0]}" )";
-	echo "shell scripts directory:   $scripts_dir";
-	echo "";
+#
+# main: get current version of gog
+#
+
+version() {
+
+	if [[ "$param_2" == "-clean" ]]
+	then
+		printf "$gog_version\n";
+	else
+		printf "\n  ${GRAY}version:${NC} gog@$gog_version\n\n";
+	fi
 }
+
+#
+# main: get working paths
+#
+
+path() {
+	printf "\n  ${GRAY}present working directory:${NC} `pwd`"
+	printf "\n  ${GRAY}CLI shell directory:${NC}       $( dirname "${BASH_SOURCE[0]}" )"
+	printf "\n  ${GRAY}global script directory:${NC}   $scripts_dir\n\n"
+}
+
+#
+# main switch
+#
 
 case "$param" in
 	"")
-		help;
-    ;;
+		draw_help;
+  ;;
 	-l)
 		list_scripts;
-    ;;
-    --list)
+  ;;
+  --list)
 		list_scripts;
-    ;;
-    -c)
+  ;;
+  -c)
 		copy_script;
-    ;;
-    --copy)
+  ;;
+  --copy)
 		copy_script;
-    ;;
-    -r)
+  ;;
+  -r)
 		remove_script;
-    ;;
-    --remove)
+  ;;
+  --remove)
 		remove_script;
-    ;;
-    -n)
+  ;;
+  -n)
 		new_script;
-    ;;
-    --new)
+  ;;
+  --new)
 		new_script;
-    ;;
-    -e)
+  ;;
+  -e)
 		edit_script;
-    ;;
-    --edit)
+  ;;
+  --edit)
 		edit_script;
-    ;;
-    -h)
-		help;
-    ;;
-    --help)
-		help;
-    ;;
-    -v)
+  ;;
+	-i)
+		install_script;
+	;;
+	--install)
+		install_script;
+	;;
+  -h)
+		draw_help_full;
+  ;;
+  --help)
+		draw_help_full;
+  ;;
+  -v)
 		version;
-    ;;
-    --version)
+  ;;
+  --version)
 		version;
-    ;;
-    -p)
+  ;;
+  -p)
 		path;
-    ;;
-    --path)
+  ;;
+  --path)
 		path;
-    ;;
-    -f)
-		force_run_script;
-    ;;
-    --force)
-		force_run_script;
-    ;;
-    *)
-    	run_script;
-    ;;
+  ;;
+	-s)
+		search;
+	;;
+	--search)
+		search;
+	;;
+	-d)
+		detail;
+	;;
+	--detail)
+		detail;
+	;;
+  *)
+    run_script;
+  ;;
 esac

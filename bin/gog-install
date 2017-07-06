@@ -1,0 +1,47 @@
+#!/bin/bash
+
+lib="/usr/local/lib"
+bin="/usr/local/bin"
+
+SOURCE="source '$bin/gog.bash'"
+PROFILE=~/.bash_profile
+
+#
+# colors
+#
+
+PURPLE='\033[0;35m'
+RED='\033[31m'
+GRAY='\033[90m'
+NC='\033[0m'
+
+#
+# check for gog lib
+#
+
+if [ -d "$lib" ];
+then
+	if [ ! -d "$lib/gog" ]
+	then
+		mkdir "$lib/gog";
+	fi
+fi
+
+#
+# check for .bash_profile
+#
+
+if [ -a "$PROFILE" ]
+then
+
+	# update bash profile with completion
+	grep -qF "$SOURCE" "$PROFILE" || echo "$SOURCE" >> "$PROFILE"
+
+	# todo: reset terminal - make command work from script
+	source ~/.bash_profile
+
+else
+
+	printf "\n  ${GRAY}gog: you do not have a .bash_profile please insert ${NC}$SOURCE${GRAY} in your alternative profile to enable autocompletions.${NC}\n\n"
+
+fi

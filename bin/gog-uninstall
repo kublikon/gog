@@ -1,10 +1,16 @@
 #!/bin/bash
 
-echo "";
-echo "--------------------------------------------------------";
-echo "gog - would you like to remove all global scripts [y/n]?";
-echo "--------------------------------------------------------";
-echo "";
+#
+# colors
+#
+
+PURPLE='\033[0;35m'
+RED='\033[31m'
+GRAY='\033[90m'
+NC='\033[0m'
+
+printf "\n  ${PURPLE}gog: would you like to remove your gog script library? [y/n]${NC}"
+printf "\n  ${GRAY}You can keep it around for a reference or to use without the CLI${NC}\n\n"
 
 read options;
 
@@ -13,4 +19,4 @@ then
 	rm -rf "/usr/local/lib/gog";
 fi
 
-echo "";
+echo

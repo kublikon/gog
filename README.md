@@ -9,11 +9,11 @@
 	<br>
 </h1>
 
-Gog is a global shell script runner (CLI on the fly). It allows you to execute scripts from any location in your terminal, without having to remember the path to your script. It is a quick and easy way to build your own CLI.
+Gog is a dynamic script manager. It allows you to search, execute and manage scripts from any location in your terminal, without having to remember the path to your script or what it does. It is a quick and easy way to build your own CLI.
 
 
-### Setup
-Install gog globally:
+### Installation
+Install with npm:
 
 ```
 npm install -g gog
