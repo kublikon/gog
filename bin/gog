@@ -207,7 +207,8 @@ draw_help_full() {
 draw_search() {
 	clear
 
-	printf "\n  searching: ${GRAY}$1${NC}\n"
+	printf "\n  Searching: ${GRAY}$1${NC}\n"
+	printf "\n  ${GRAY}Start typing and use arrow keys to select your search result${NC}\n"
 
 	draw_list "$2"
 }

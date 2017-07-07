@@ -40,7 +40,10 @@ To quickly search and download scripts enter `gog -s` followed by the name of a 
 If you are manually constructing scripts, simply ensure that you contain header line at the beginning of your file (example: `#!/usr/bin/env node`) so that gog can understand how to execute your script. If no header is found, gog will attempt to execute your script as bash.
 
 
-### Usage / Documents
+## Usage / Documents
 Basic usage: `gog <command> [args]`, where `<command>` is the name of the script you are executing or `gog [args] <scriptname> [<properties>]`.
 
-For complete documentation and examples, check out [gog.codes](http://gog.codes/documents)
+For complete documentation and examples, check out [gog.codes](http://gog.codes/documents).
+
+## Issues
+Help us improve gog by reporting any CLI related issues to [issues](https://github.com/kublikon/gog/issues).
