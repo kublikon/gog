@@ -12,7 +12,8 @@
     },
     "main":"./bin/gog",
     "directories": {
-        "bin": "./bin"
+        "bin": "./bin",
+        "lib": "./lib"
     },
     "repository":{
         "url":"https://github.com/kublikon/gog.git",

@@ -12,7 +12,7 @@
 Gog is a dynamic script manager. It allows you to search, execute and manage scripts from any location in your terminal, without having to remember the path to your script or what it does. It is a quick and easy way to build your own CLI.
 
 
-### Installation
+## Installation
 Install with npm:
 
 ```
@@ -25,44 +25,22 @@ or for local development:
 2. `npm install -g <path to gog>`
 
 
+### System Support
+gog currently supports Mac and Linux platforms.
+
+
 ### Script Support
 
 * Bash
-* JavaScript - via node
+* JavaScript - with Node.js installed
 * Python
 
-Simply ensure that you contain header line at the beginning of your file (example: `#!/usr/bin/env node`) so
-that gog can understand how to execute your script. If no header is found, gog will attempt to execute your
-script as bash.
+To quickly search and download scripts enter `gog -s` followed by the name of a script you are looking for.
+
+If you are manually constructing scripts, simply ensure that you contain header line at the beginning of your file (example: `#!/usr/bin/env node`) so that gog can understand how to execute your script. If no header is found, gog will attempt to execute your script as bash.
 
 
-### Usage
-Basic usage: `gog <command>`, where `<command>` is one of:
+### Usage / Documents
+Basic usage: `gog <command> [args]`, where `<command>` is the name of the script you are executing or `gog [args] <scriptname> [<properties>]`.
 
-```
-   -h, --help                 - general help/usage of gog
-   -v, --version              - current version of gog
-   -p, --path                 - path to working directory
-   -l, --list                 - list all shell scripts available
-   -c, --copy <script path>   - copy script into global space
-   -r, --remove <script name> - remove shell script
-   -n  --new <script name>    - opens vim and adds script after exit
-   -e, --edit <script name>   - edits global script in vim
-
-   <script name>              - will execute given shell script
-   -f, --force <script name>  - will run the script as admin user
-```
-
-
-### Examples
-Passing parameters works very much the same way as running any regular script:
-
-```bash
-gog <script name> <parameter> <parameter> <parameter> ...
-```
-
-or running script as admin:
-
-```bash
-gog -f <script name> <parameter> <parameter> <parameter> ...
-```
+For complete documentation and examples, check out [gog.codes](http://gog.codes/documents)
