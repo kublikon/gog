@@ -43,7 +43,7 @@ If you are manually constructing scripts, simply ensure that you contain header 
 ## Usage / Documents
 Basic usage: `gog <command> [args]`, where `<command>` is the name of the script you are executing or `gog [args] <scriptname> [<properties>]`.
 
-For complete documentation and examples, check out [gog.codes](http://gog.codes/documents).
+For complete documentation and examples, check out [gog.codes](https://gog.codes/documents).
 
 ## Issues
 Help us improve gog by reporting any CLI related issues to [issues](https://github.com/kublikon/gog/issues).
