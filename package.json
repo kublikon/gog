@@ -1,27 +1,29 @@
 {
-    "name":"gog",
-    "version":"0.0.9",
-    "description":"Global shell script manager",
+    "name": "gog",
+    "version": "0.0.9",
+    "description": "Global shell script manager",
     "homepage": "https://gog.codes/",
-    "contributors":[
+    "author": {
+      "name": "Jakub Szerszen",
+      "email": "kublikon.apps@gmail.com"
+    },
+    "contributors": [
         "Jakub Szerszen <kublikon.apps@gmail.com>"
     ],
     "scripts": {
         "postinstall": "./bin/gog-install",
         "postuninstall": "./bin/gog-uninstall"
     },
-    "main":"./bin/gog",
+    "main": "./bin/gog",
     "directories": {
-        "bin": "./bin",
-        "lib": "./lib"
+        "bin": "./bin"
     },
-    "repository":{
-        "url":"https://github.com/kublikon/gog.git",
-        "type":"git"
+    "repository": {
+        "url": "https://github.com/kublikon/gog.git",
+        "type": "git"
     },
-    "bugs":{
-        "mail":"kublikon.apps@gmail.com",
-        "url":"http://github.com/kublikon/gog/issues"
+    "bugs": {
+        "url": "http://github.com/kublikon/gog/issues"
     },
     "keywords": [
         "cli",
@@ -37,7 +39,7 @@
     ],
     "dependencies": {
     },
-    "devDependencies":{
+    "devDependencies": {
     },
     "preferGlobal": true,
     "private": false,

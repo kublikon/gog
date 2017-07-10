@@ -25,11 +25,11 @@ or for local development:
 2. `npm install -g <path to gog>`
 
 
-### System Support
-gog currently supports Mac and Linux platforms.
+## System Support
+gog currently supports Mac and most Linux platforms.
 
 
-### Script Support
+## Script Support
 
 * Bash
 * JavaScript - with Node.js installed
@@ -40,10 +40,15 @@ To quickly search and download scripts enter `gog -s` followed by the name of a 
 If you are manually constructing scripts, simply ensure that you contain header line at the beginning of your file (example: `#!/usr/bin/env node`) so that gog can understand how to execute your script. If no header is found, gog will attempt to execute your script as bash.
 
 
-## Usage / Documents
-Basic usage: `gog <command> [args]`, where `<command>` is the name of the script you are executing or `gog [args] <scriptname> [<properties>]`.
+## Contribute Scripts
+You can contribute your own scripts by visiting [gog.codes](https://gog.codes) and creating a free account. Become part of the community of developers creating better terminal scripts for all.
 
-For complete documentation and examples, check out [gog.codes](https://gog.codes/documents).
+
+## Usage / Documents
+Basic usage: `gog <command> [args]`, where `<command>` is the name of the script you are executing or `gog [args] <scriptname> [<properties>]`. Information is also available in the gog CLI, `gog -h`.
+
+For complete documentation and examples, check out [gog.codes/documents](https://gog.codes/documents).
+
 
 ## Issues
 Help us improve gog by reporting any CLI related issues to [issues](https://github.com/kublikon/gog/issues).

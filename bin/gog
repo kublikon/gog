@@ -3,14 +3,8 @@
 gog_version="0.0.9";
 
 dir="$( dirname "${BASH_SOURCE[0]}" )";
-global_gog_path="/usr/local/lib/gog";
-
-if [ -d "$global_gog_path" ]
-then
-	scripts_dir="/usr/local/lib/gog";
-else
-	scripts_dir=${dir//bin/lib}"/node_modules/gog/shell-scripts";
-fi
+lib="/usr/local/lib";
+gog_library="/usr/local/lib/gog";
 
 #
 # colors
@@ -42,8 +36,8 @@ SELECTED_NAME=""
 # service
 #
 
-SERVICE="http://52.11.135.48:8080/gog"
-WEB="http://52.11.135.48:8080/scripts"
+SERVICE="https://gog.codes/gog"
+WEB="https://gog.codes/scripts"
 
 #
 # params
@@ -145,16 +139,16 @@ draw_help() {
 	printf "  ${GRAY}where <command> is one of:${NC}\n";
 	echo "      -h, --help                  general help/usage of gog";
 	echo "      -v, --version               current version of gog";
-	echo "      -p, --path                  path to working directory";
+	echo "      -p, --path                  gog paths information";
 	echo "      -l, --list                  list all shell scripts available";
 	echo "      -s, --search                starts script search"
-	echo "      -c, --copy <script path>    copy script into global space";
+	echo "      -c, --copy <script path>    copy script into gog library";
 	echo "      -r, --remove <script name>  remove shell script";
 	echo "      -n, --new <script name>     opens vim and adds script after exit";
-	echo "      -e, --edit <script name>    edits global script in vim";
+	echo "      -e, --edit <script name>    edits library script in vim";
 
 	printf "\n\n  gog <script name>               will execute given shell script\n\n";
-	printf "  ${GRAY}gog@$gog_version - global working directory: ${BASH_SOURCE[0]}${NC}\n\n";
+	printf "  ${GRAY}gog@$gog_version - script library: $gog_library${NC}\n\n";
 }
 
 #
@@ -164,7 +158,7 @@ draw_help() {
 draw_help_full() {
 	printf "\n  ${GRAY}version:${NC} gog@$gog_version\n  ${GRAY}global working directory:${NC} ${BASH_SOURCE[0]}\n"
 	printf "\n  Usage of gog:\n"
-	printf "\n  gog <script name>           will execute given script from the global working directory"
+	printf "\n  gog <script name>           will execute given script from gog's library"
 	printf "\n  gog <script name> <param>   will execute given script and pass parameters into it (maximum 9 parameters)\n\n"
 
 	printf "\n  Searching for new scripts:\n"
@@ -182,17 +176,17 @@ draw_help_full() {
 	printf "\n  gog -v ${GRAY}or${NC} gog --version                 will display installed version of gog CLI"
 	printf "\n  gog -v -clean ${GRAY}or${NC} gog --version -clean   will display sanitized version of gog CLI\n"
 
-	printf "\n  gog -p ${GRAY}or${NC} gog --path         will display paths for global, current working directories as well as location of gog CLI\n"
-	printf "\n  gog -l ${GRAY}or${NC} gog --list         will display all globally installed scripts in gog CLI"
+	printf "\n  gog -p ${GRAY}or${NC} gog --path         will display path to library, current working directories as well as location of gog CLI\n"
+	printf "\n  gog -l ${GRAY}or${NC} gog --list         will display all globally installed scripts in gog's library "
 	printf "\n  gog -l -d ${GRAY}or${NC} gog --list -d   will display all globally installed scripts with description"
 	printf "\n  gog -l -k ${GRAY}or${NC} gog --list -k   will display all globally installed scripts with keywords"
 	printf "\n  gog -l -v ${GRAY}or${NC} gog --list -v   will display all globally installed scripts with versions\n"
 	printf "\n  gog -d <script name> ${GRAY}or${NC} gog --detail <script name>   will open script in browser with additional information\n\n"
 
 	printf "\n  Utility commands:\n"
-	printf "\n  gog -c <script path> ${GRAY}or${NC} gog --copy <script path>              will copy script from provided path into gog CLI"
-	printf "\n  gog -r <script name> ${GRAY}or${NC} gog --remove <script name>            will remove script from gog CLI"
-	printf "\n  gog -n <script name> ${GRAY}or${NC} gog --new <script name>               creates a new script in vim and saves it to gog CLI\n"
+	printf "\n  gog -c <script path> ${GRAY}or${NC} gog --copy <script path>              will copy script from provided path into gog's library"
+	printf "\n  gog -r <script name> ${GRAY}or${NC} gog --remove <script name>            will remove script from gog's library"
+	printf "\n  gog -n <script name> ${GRAY}or${NC} gog --new <script name>               creates a new script in vim and saves it to gog's library\n"
 
 	printf "\n  gog -e <script name> ${GRAY}or${NC} gog --edit <script name>              allows you to edit script in vim"
 	printf "\n  gog -e <script name> -ide ${GRAY}or${NC} gog --edit <script name>  -ide   allows you to edit script in your default ide \n"
@@ -270,7 +264,7 @@ get_download() {
 		draw_feedback "installing $script_name"
 		local content=$(curl -s -X GET "$SERVICE/download/$script_name")
 
-		echo "$content" > "$scripts_dir/$script_name"
+		echo "$content" > "$gog_library/$script_name"
 
 		SEARCH=""
 	fi
@@ -282,17 +276,23 @@ get_download() {
 
 get_search() {
 
-	if [[ $param_2 == "-n" ]]
+	if [[ $SEARCH != "" ]];
 	then
-		filter_scripts $(curl -s -X GET "$SERVICE/name/$SEARCH")
-	elif [[ $param_2 == "-d" ]]
-	then
-		filter_scripts $(curl -s -X GET "$SERVICE/description/$SEARCH")
-	elif [[ $param_2 == "-k" ]]
-	then
-		filter_scripts $(curl -s -X GET "$SERVICE/keyword/$SEARCH")
+
+		if [[ $param_2 == "-n" ]]
+		then
+			filter_scripts $(curl -s -X GET "$SERVICE/name/$SEARCH")
+		elif [[ $param_2 == "-d" ]]
+		then
+			filter_scripts $(curl -s -X GET "$SERVICE/description/$SEARCH")
+		elif [[ $param_2 == "-k" ]]
+		then
+			filter_scripts $(curl -s -X GET "$SERVICE/keyword/$SEARCH")
+		else
+			filter_scripts $(curl -s -X GET "$SERVICE/name/$SEARCH")
+		fi
 	else
-		filter_scripts $(curl -s -X GET "$SERVICE/name/$SEARCH")
+		filter_scripts ""
 	fi
 }
 
@@ -330,6 +330,28 @@ next_script() {
 	list_search_scripts | grep "$SELECTED_SEARCH" -A 1 | tail -n 1
 }
 
+#
+# main: ensure install
+#
+
+check_install() {
+	if [ -d "$lib" ];
+	then
+		if [ ! -d "$lib/gog" ]
+		then
+
+			if ! mkdir -m 777 "$lib/gog" 2>/dev/null; then
+
+				printf "\n  ${PURPLE}gog installation: gog needs to setup script library${NC}\n\n"
+
+				sudo mkdir -m 777 "$lib/gog"
+
+			else
+				printf "\n  ${PURPLE}gog installation: setting up script library${NC}\n\n"
+			fi
+		fi
+	fi
+}
 
 #
 # main: search for scripts
@@ -341,8 +363,6 @@ search() {
 
 	draw_search "$SEARCH" "${LIST[0]}"
 
-	# TODO: find a way to check delete key - line 240
-
 	while true; do
     read -n 1 k
 
@@ -352,7 +372,7 @@ search() {
 
 			get_search "$SEARCH"
 			draw_search "$SEARCH" "$SELECTED_SEARCH"
-		elif [[ "$k" == "\e[3~" ]]
+		elif [[ "$k" == $'\x7f' ]]
 		then
 			SEARCH=${SEARCH:0:(${#SEARCH}-1)}
 
@@ -361,16 +381,38 @@ search() {
 		fi
 
     case "$k" in
-      $UP)
-				draw_search "$SEARCH" "$(prev_script)"
-        ;;
-      $DOWN)
-				draw_search "$SEARCH" "$(next_script)"
-        ;;
 			$RETURN)
 				fullscreen_leave
 				get_download
 				exit
+				;;
+			$'\x1b')
+
+				read -rsn1 -t 1 tmp
+
+				if [[ "$tmp" == "[" ]];
+				then
+					read -rsn1 -t 1 tmp
+					case "$tmp" in
+					"A")
+						draw_search "$SEARCH" "$(prev_script)"
+						;;
+					"B")
+						draw_search "$SEARCH" "$(next_script)"
+						;;
+					"C")
+						draw_search "$SEARCH" "$(next_script)"
+						;;
+					"D")
+						draw_search "$SEARCH" "$(prev_script)"
+						;;
+					esac
+				else
+					# TODO: esc - currently double entry bug
+					fullscreen_leave
+					exit
+				fi
+
 				;;
     esac
   done
@@ -398,11 +440,11 @@ detail() {
 
 run_script() {
 
-	cd $scripts_dir
+	cd $gog_library
 
 	ensure_script $param
 	draw_header "$param"
-	chmod a+rwx $param
+	# chmod a+rwx $param - taking this out for now for permission issue
 
 	read -r header < $param;
 
@@ -433,9 +475,9 @@ run_script() {
 #
 
 list_scripts() {
-	printf "\n  ${GRAY}$scripts_dir${NC}\n"
+	printf "\n  ${GRAY}$gog_library${NC}\n"
 
-	cd $scripts_dir;
+	cd $gog_library;
 
 	local files=(*)
 	local last=${files[$(( ${#files[*]} - 1 ))]}
@@ -474,12 +516,12 @@ list_scripts() {
 copy_script() {
 	if [[ $param_2 ]]
 	then
-		cp $param_2 $scripts_dir;
+		cp $param_2 $gog_library;
 	else
 		draw_help;
 	fi
 
-	draw_feedback "$param_2 added to global"
+	draw_feedback "$param_2 added to library"
 }
 
 #
@@ -495,9 +537,9 @@ remove_script() {
 
 		if [ $input_answer = 'y' ]
 		then
-			rm $scripts_dir/$param_2;
+			rm $gog_library/$param_2;
 
-			draw_feedback "$param_2 removed from global"
+			draw_feedback "$param_2 removed from library"
 		fi
 
 	else
@@ -515,10 +557,10 @@ new_script() {
 	then
 		vim "$param_2";
 
-		cp $param_2 $scripts_dir;
+		cp $param_2 $gog_library;
 		rm $param_2;
 
-		draw_feedback "$param_2 added to global"
+		draw_feedback "$param_2 added to library"
 	else
 		draw_feedback "please include script name"
 	fi
@@ -535,9 +577,9 @@ edit_script() {
 
 		if [ "$param_3" == '-ide' ]
 		then
-			open -t "$scripts_dir/$param_2"
+			open -t "$gog_library/$param_2"
 		else
-			vim "$scripts_dir/$param_2"
+			vim "$gog_library/$param_2"
 		fi
 
 		draw_feedback "$param_2 script edited"
@@ -560,7 +602,7 @@ install_script() {
 	then
 		draw_not_found "script $param_2 not found"
 	else
-		echo "$content" > "$scripts_dir/$param_2"
+		echo "$content" > "$gog_library/$param_2"
 
 		draw_feedback "$param_2 installed"
 	fi
@@ -587,84 +629,39 @@ version() {
 path() {
 	printf "\n  ${GRAY}present working directory:${NC} `pwd`"
 	printf "\n  ${GRAY}CLI shell directory:${NC}       $( dirname "${BASH_SOURCE[0]}" )"
-	printf "\n  ${GRAY}global script directory:${NC}   $scripts_dir\n\n"
+	printf "\n  ${GRAY}global script library:${NC}   $gog_library\n\n"
 }
 
 #
 # main switch
 #
 
+# always check the install
+check_install
+
 case "$param" in
-	"")
-		draw_help;
-  ;;
-	-l)
-		list_scripts;
-  ;;
-  --list)
-		list_scripts;
-  ;;
-  -c)
-		copy_script;
-  ;;
-  --copy)
-		copy_script;
-  ;;
-  -r)
-		remove_script;
-  ;;
-  --remove)
-		remove_script;
-  ;;
-  -n)
-		new_script;
-  ;;
-  --new)
-		new_script;
-  ;;
-  -e)
-		edit_script;
-  ;;
-  --edit)
-		edit_script;
-  ;;
-	-i)
-		install_script;
-	;;
-	--install)
-		install_script;
-	;;
-  -h)
-		draw_help_full;
-  ;;
-  --help)
-		draw_help_full;
-  ;;
-  -v)
-		version;
-  ;;
-  --version)
-		version;
-  ;;
-  -p)
-		path;
-  ;;
-  --path)
-		path;
-  ;;
-	-s)
-		search;
-	;;
-	--search)
-		search;
-	;;
-	-d)
-		detail;
-	;;
-	--detail)
-		detail;
-	;;
-  *)
-    run_script;
-  ;;
+	"") draw_help ;;
+	-l) list_scripts ;;
+  --list) list_scripts ;;
+  -c) copy_script ;;
+  --copy) copy_script ;;
+  -r) remove_script ;;
+  --remove) remove_script ;;
+  -n) new_script ;;
+  --new) new_script ;;
+  -e) edit_script ;;
+  --edit) edit_script ;;
+	-i) install_script ;;
+	--install) install_script ;;
+  -h) draw_help_full ;;
+  --help) draw_help_full ;;
+  -v) version ;;
+  --version) version ;;
+  -p) path ;;
+  --path) path ;;
+	-s) search ;;
+	--search) search ;;
+	-d) detail ;;
+	--detail) detail ;;
+  *) run_script ;;
 esac
