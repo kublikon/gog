@@ -23,8 +23,13 @@ if [ -d "$lib" ];
 then
 	if [ ! -d "$lib/gog" ]
 	then
-		
-		mkdir "$lib/gog";
+
+		if ! mkdir -m 777 "$lib/gog" 2>/dev/null; then
+
+			# fail silently - gog will check for this directory and set it up
+			printf "\n  ${PURPLE}gog installation: gog will configure on the first attempt${NC}\n\n"
+
+		fi
 	fi
 fi
 
