@@ -1,6 +1,6 @@
 #!/bin/bash
 
-gog_version="0.0.9";
+gog_version="0.0.10";
 
 dir="$( dirname "${BASH_SOURCE[0]}" )";
 lib="/usr/local/lib";
@@ -39,6 +39,9 @@ SELECTED_NAME=""
 SERVICE="https://gog.codes/gog"
 WEB="https://gog.codes/scripts"
 
+# SERVICE="http://10.0.1.6:3400/gog"
+# WEB="http://10.0.1.6:3400/scripts"
+
 #
 # params
 #
@@ -55,7 +58,7 @@ param_9=$9;
 param_10=$10;
 
 #
-# Common
+# common
 #
 
 fullscreen_enter() {
@@ -368,16 +371,26 @@ search() {
 
 		if [[ "$k" =~ [0-9a-z] ]]
 		then
+
+			# add letter
 			SEARCH+="$k"
 
 			get_search "$SEARCH"
 			draw_search "$SEARCH" "$SELECTED_SEARCH"
 		elif [[ "$k" == $'\x7f' ]]
 		then
-			SEARCH=${SEARCH:0:(${#SEARCH}-1)}
 
-			get_search "$SEARCH"
-			draw_search "$SEARCH" "$SELECTED_SEARCH"
+			# remove letter
+			if [[ "$SEARCH" == "" ]]
+			then
+				draw_search "$SEARCH" "$SELECTED_SEARCH"
+			else
+				SEARCH=${SEARCH:0:(${#SEARCH}-1)}
+
+				get_search "$SEARCH"
+				draw_search "$SEARCH" "$SELECTED_SEARCH"
+			fi
+
 		fi
 
     case "$k" in
