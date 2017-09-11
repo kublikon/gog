@@ -1,6 +1,6 @@
 #!/bin/bash
 
-gog_version="0.0.10";
+gog_version="0.0.12";
 
 dir="$( dirname "${BASH_SOURCE[0]}" )";
 lib="/usr/local/lib";
@@ -467,12 +467,17 @@ run_script() {
 		if [[ $header =~ "bash" ]]
 		then
 			bash ./$param $param_2 $param_3 $param_4 $param_5 $param_6 $param_7 $param_8 $param_9;
-		elif [[ $header =~ "node" ]]
+		elif [[ $header =~ "javascript" ]]
 		then
 			node ./$param $param_2 $param_3 $param_4 $param_5 $param_6 $param_7 $param_8 $param_9;
 		elif [[ $header =~ "python" ]]
 		then
 			python ./$param $param_2 $param_3 $param_4 $param_5 $param_6 $param_7 $param_8 $param_9;
+		elif [[ $header =~ "c" ]]
+		then
+
+			# TODO: remove header before execution and make executable
+			cc ./$param $param_2 $param_3 $param_4 $param_5 $param_6 $param_7 $param_8 $param_9;
 		else
 			bash ./$param $param_2 $param_3 $param_4 $param_5 $param_6 $param_7 $param_8 $param_9;
 		fi
